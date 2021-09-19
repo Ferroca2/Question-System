@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require("body-parser");
 const connection = require("./database/database");
 const Pergunta = require("./database/pergunta");
+const Resposta = require("./database/resposta")
 
 connection
   .authenticate()
@@ -57,6 +58,20 @@ app.get("/pergunta/:id", (req, res) =>{
         }
     })
 })
+
+app.post("/responder", (req, res) => {
+  let corpo = req.params.corpo
+  let perguntaId = req.params.pergunta
+  Resposta.create(
+    {
+      corpo: corpo,
+      perguntaId: perguntaId
+    }
+  ).then(()=>{
+    res.redirect("/pergunta/"+perguntaId)
+  })
+})
+
 app.listen(8000, () => {
   console.log("App rodando");
 });
